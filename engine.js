@@ -57,17 +57,26 @@ function World(context, gravity, width, height) {
 function Input (debug) {
   let listeners = {};
   
-  let onKeyPress = (key, func) => {
-    listeners[key] = func;
-    console.log(`Listener added: ${key}`)
+  let onKeyPress = (k, callback) => {
+    if (Array.isArray(k)) {
+      for (let i = 0; i < k.length; i++) {
+        let key = k[i];
+
+        if (typeof key != "string") throw new TypeError(`Invalid key in array at index ${i}: ${key}`)
+
+        listeners[key] = callback;
+      }
+    } else if (typeof k == "string") {
+      listeners[k] = callback;
+    } else {
+      throw new TypeError(`Invalid argument, please enter a String or Array`)
+    }
   }
 
   let executeListeners = (event) => {
     if (debug) console.log(event.key)
-    try {
+    if (listeners[event.key]) {
       listeners[event.key]()
-    } catch (error) {
-
     }
   }
 

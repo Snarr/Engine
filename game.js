@@ -12,7 +12,7 @@ let player = world.Sprite(100, 100, 100, 100, 'red');
 let floor = world.Sprite(0, 600, 800, 200, 'green');
 let background = world.Background('#34bdeb')
 
-input.onKeyPress('ArrowUp', () => { player.setSpeedY(-10) })
+input.onKeyPress(['ArrowUp', 'w'], () => { player.setSpeedY(-10) })
 
 function Pillars(posX, posY) {
   let pillarTop = world.Sprite(posX, posY-500, 100, 500, 'black');
