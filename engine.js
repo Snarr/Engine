@@ -7,13 +7,20 @@
  * @returns 
  */
 function World(context, gravity, width, height) {
-  let Background = (color) => {
+  this.context = context;
+  this.gravity = gravity;
+  this.width = width;
+  this.height = height;
 
-    let draw = () => {
-      context.fillStyle = color;
-      context.fillRect(0, 0, width, height);
+  let world = this;
+
+  this.Background = function (color) {
+    this.parent = world;
+
+    this.draw = () => {
+      this.parent.context.fillStyle = color;
+      this.parent.context.fillRect(0, 0, width, height);
     }
-    return { draw };
   }
 
   /**
@@ -25,67 +32,78 @@ function World(context, gravity, width, height) {
    * @param {string} color 
    * @returns
    */
-  function Sprite (posX, posY, width, height, color) {
-    let speedX = 0;
-    let speedY = 0;
-    let anchored = false;
+  this.Sprite = function (posX, posY, width, height, color) {
+    this.parent = world;
+    this.posX = posX;
+    this.posY = posY;
+    this.width = width;
+    this.height = height;
+    this.color = color;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.anchored = false;
   
-    function draw () {
-      context.fillStyle = color;
-      context.fillRect(posX, posY, width, height)
+    /**
+     * Draws the sprite as a Rectangle according to its color, position, width, and height
+     */
+    this.draw = function () {
+      this.parent.context.fillStyle = this.color;
+      this.parent.context.fillRect(this.posX, this.posY, this.width, this.height)
     }
     
-    function update () {
-      posX += speedX;
+    /**
+     * Updates the Sprite's position according to its speed
+     */
+    this.update = function () {
+      this.posX += this.speedX;
 
-      posY += speedY;
-      if (!anchored) { speedY += gravity };
+      this.posY += this.speedY;
+      if (!this.anchored) { this.speedY += this.parent.gravity };
     }
 
     /**
      * Set the horizontal speed of the Sprite
      * @param {number} x 
      */
-    function setSpeedX (x) {
-      speedX = x
+    this.setSpeedX = function (x) {
+      this.speedX = x
     }
 
     /**
      * Set the vertical speed of the Sprite
      * @param {number} y 
      */
-    function setSpeedY (y) {
-      speedY = y
+    this.setSpeedY = function (y) {
+      this.speedY = y
     }
 
     /**
      * Set whether or not the object will be affected by other forces (gravity, other Sprites)
      * @param {Boolean} value 
      */
-    function setAnchored (value) {
-      anchored = value
+    this.setAnchored = function (value) {
+      this.anchored = value
     }
 
-    function top () { return posY };
-    function bottom () { return posY + height };
-    function left () { return posX };
-    function right () { return posX + width };
+    this.top = function  () { return this.posY };
+    this.bottom = function () { return this.posY + this.height };
+    this.left = function () { return this.posX };
+    this.right = function () { return this.posX + this.width };
     
     /**
      * 
      * @param {Sprite} other 
      * @returns {Boolean} True if Sprite is colliding with other Sprite
      */
-    function collidesWith (other) {
-      return (left()-1 < other.right() &&
-      right()+1 > other.left() &&
-      top()-1 < other.bottom() &&
-      bottom()+1 > other.top())
+    this.collidesWith = function (other) {
+      return (this.left()-1 < other.right() &&
+      this.right()+1 > other.left() &&
+      this.top()-1 < other.bottom() &&
+      this.bottom()+1 > other.top())
     }
   
-    return { draw, update, setAnchored, collidesWith, setSpeedX, setSpeedY, top, bottom, left, right };
+    // return { draw, update, setAnchored, collidesWith, setSpeedX, setSpeedY, top, bottom, left, right };
   }
-  return { Background, Sprite, Input };
 }
 
 
@@ -95,39 +113,39 @@ function World(context, gravity, width, height) {
  * @returns {onKeyPress}
  */
 function Input (debug) {
-  let listeners = {};
+  this.listeners = {};
  
   /**
    * 
    * @param {string|string[]} k String or array of strings representing key(s) to trigger callback
    * @param {function} callback Function to run when key(s) are pressed
    */
-  function onKeyPress (k, callback) {
+  this.onKeyPress = (k, callback) => {
     if (Array.isArray(k)) {
       for (let i = 0; i < k.length; i++) {
         let key = k[i];
 
         if (typeof key != "string") throw new TypeError(`Invalid key in array at index ${i}: ${key}`)
 
-        listeners[key] = callback;
+        this.listeners[key] = callback;
       }
     } else if (typeof k == "string") {
-      listeners[k] = callback;
+      this.listeners[k] = callback;
     } else {
       throw new TypeError(`Invalid argument, please enter a String or Array`)
     }
   }
 
-  let executeListeners = (event) => {
+  this.executeListeners = (event) => {
     if (debug) console.log(event.key)
-    if (listeners[event.key]) {
-      listeners[event.key]()
+    if (this.listeners[event.key]) {
+      this.listeners[event.key]()
     }
   }
 
-  document.addEventListener('keydown', executeListeners);
+  document.addEventListener('keydown', this.executeListeners);
 
-  return { onKeyPress }
+  // return { onKeyPress }
 }
 
 export { World, Input }
