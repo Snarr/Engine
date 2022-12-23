@@ -61,30 +61,6 @@ function World(context, gravity, width, height) {
       if (!this.anchored) { this.speedY += this.parent.gravity };
     }
 
-    /**
-     * Set the horizontal speed of the Sprite
-     * @param {number} x 
-     */
-    this.setSpeedX = function (x) {
-      this.speedX = x
-    }
-
-    /**
-     * Set the vertical speed of the Sprite
-     * @param {number} y 
-     */
-    this.setSpeedY = function (y) {
-      this.speedY = y
-    }
-
-    /**
-     * Set whether or not the object will be affected by other forces (gravity, other Sprites)
-     * @param {Boolean} value 
-     */
-    this.setAnchored = function (value) {
-      this.anchored = value
-    }
-
     this.top = function  () { return this.posY };
     this.bottom = function () { return this.posY + this.height };
     this.left = function () { return this.posX };
