@@ -12,40 +12,38 @@ let player = new world.Sprite(100, 100, 50, 50, 'red');
 let floor = new world.Sprite(0, 600, 800, 200, 'green');
 let background = new world.Background('#34bdeb')
 
-input.onKeyPress(['ArrowUp', 'w'], () => { player.setSpeedY(-10) })
+input.onKeyPress(['ArrowUp', 'w'], () => { player.speedY = -10})
 
 function Pillars(posX, posY) {
-  let pillarTop = new world.Sprite(posX, posY-500, 50, 500, 'black');
-  pillarTop.setSpeedX(-3);
-  pillarTop.setAnchored(true);
+  this.pillarTop = new world.Sprite(posX, posY-500, 50, 500, 'black');
+  this.pillarTop.speedX = -3;
+  this.pillarTop.anchored = true;
 
-  let pillarBottom = new world.Sprite(posX, posY+150, 50, 500, 'black');
-  pillarBottom.setSpeedX(-3);
-  pillarBottom.setAnchored(true);
+  this.pillarBottom = new world.Sprite(posX, posY+150, 50, 500, 'black');
+  this.pillarBottom.speedX = -3;
+  this.pillarBottom.anchored = true;
 
-  let draw = () => {
-    pillarTop.draw();
-    pillarBottom.draw();
+  this.draw = () => {
+    this.pillarTop.draw();
+    this.pillarBottom.draw();
   }
 
-  let update = () => {
-    pillarTop.update();
-    pillarBottom.update();
+  this.update = () => {
+    this.pillarTop.update();
+    this.pillarBottom.update();
   }
 
-  let collidesWith = (other) => {
-    return pillarTop.collidesWith(other) || pillarBottom.collidesWith(other)
+  this.collidesWith = (other) => {
+    return this.pillarTop.collidesWith(other) || this.pillarBottom.collidesWith(other)
   }
   
-  let setSpeedX = (speed) => {
-    pillarTop.setSpeedX(0)
-    pillarBottom.setSpeedX(0);
+  this.setSpeedX = (speed) => {
+    this.pillarTop.speedX = speed;
+    this.pillarBottom.speedX = speed;
   }
-
-  return { draw, update, collidesWith, setSpeedX }
 }
 
-let pillars1 = Pillars(500, 300)
+let pillars1 = new Pillars(500, 300)
 
 setInterval(() => {
   background.draw();
@@ -58,7 +56,7 @@ setInterval(() => {
   pillars1.update();
   player.update();
   if (player.collidesWith(floor)) { 
-    player.setSpeedY(0)
+    player.speedY = 0;
   }
   if (pillars1.collidesWith(player)) {
     pillars1.setSpeedX(0)
