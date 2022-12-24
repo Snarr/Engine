@@ -1,127 +1,149 @@
-/**
- * 
- * @param {CanvasRenderingContext2D} context Document context for World to be drawn upon
- * @param {number} gravity Acceleration force applied downwards to unanchored Sprites
- * @param {number} width Width of the world for drawing the background
- * @param {number} height Height of the world for drawing the background
- * @returns 
- */
-function World(context, gravity, width, height) {
-  this.context = context;
-  this.gravity = gravity;
-  this.width = width;
-  this.height = height;
-
-  let world = this;
-
-  this.Background = function (color) {
-    this.parent = world;
-
-    this.draw = () => {
-      this.parent.context.fillStyle = color;
-      this.parent.context.fillRect(0, 0, width, height);
+class Canvas {
+    constructor(id, width, height) {
+        this.id = id;
+        this.width = width;
+        this.height = height;
+        this.element = document.getElementById(this.id);
+        this.element.width = this.width;
+        this.element.height = this.height;
+        this.context = this.element.getContext('2d');
     }
-  }
-
-  /**
-   * 
-   * @param {number} posX 
-   * @param {number} posY 
-   * @param {number} width 
-   * @param {number} height 
-   * @param {string} color 
-   * @returns
-   */
-  this.Sprite = function (posX, posY, width, height, color) {
-    this.parent = world;
-    this.posX = posX;
-    this.posY = posY;
-    this.width = width;
-    this.height = height;
-    this.color = color;
-    this.speedX = 0;
-    this.speedY = 0;
-    this.anchored = false;
-  
-    /**
-     * Draws the sprite as a Rectangle according to its color, position, width, and height
-     */
-    this.draw = function () {
-      this.parent.context.fillStyle = this.color;
-      this.parent.context.fillRect(this.posX, this.posY, this.width, this.height)
+    draw(s) {
+        if (s instanceof Sprite) {
+            this.drawSprite(s);
+        }
+        else if (s instanceof Group) {
+            for (let sprite of s) {
+                this.draw(sprite);
+            }
+        }
     }
-    
-    /**
-     * Updates the Sprite's position according to its speed
-     */
-    this.update = function () {
-      this.posX += this.speedX;
-
-      this.posY += this.speedY;
-      if (!this.anchored) { this.speedY += this.parent.gravity };
+    update(s) {
+        if (s instanceof Sprite) {
+            this.updateSprite(s);
+        }
+        else if (s instanceof Group) {
+            for (let sprite of s) {
+                this.update(sprite);
+            }
+        }
     }
-
-    this.top = function  () { return this.posY };
-    this.bottom = function () { return this.posY + this.height };
-    this.left = function () { return this.posX };
-    this.right = function () { return this.posX + this.width };
-    
-    /**
-     * 
-     * @param {Sprite} other 
-     * @returns {Boolean} True if Sprite is colliding with other Sprite
-     */
-    this.collidesWith = function (other) {
-      return (this.left()-1 < other.right() &&
-      this.right()+1 > other.left() &&
-      this.top()-1 < other.bottom() &&
-      this.bottom()+1 > other.top())
+    text(posX, posY, textVal, size) {
+        this.context.fillStyle = 'white';
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'middle';
+        this.context.font = `${size}px Verdana`;
+        this.context.fillText(textVal, posX, posY);
     }
-  
-    // return { draw, update, setAnchored, collidesWith, setSpeedX, setSpeedY, top, bottom, left, right };
-  }
+    updateSprite(sprite) {
+        sprite.posX += sprite.speedX;
+        sprite.posY += sprite.speedY;
+        sprite.speedX += sprite.accelX;
+        sprite.speedY += sprite.accelY;
+    }
+    drawSprite(sprite) {
+        var _a;
+        this.context.fillStyle = sprite.color;
+        this.context.beginPath();
+        (_a = this.context) === null || _a === void 0 ? void 0 : _a.roundRect(sprite.posX, sprite.posY, sprite.width, sprite.height, sprite.cornerRadius);
+        this.context.fill();
+    }
 }
-
-
-/**
- * 
- * @param {Boolean} debug Enable console logs helpful for debugging
- * @returns {onKeyPress}
- */
-function Input (debug) {
-  this.listeners = {};
- 
-  /**
-   * 
-   * @param {string|string[]} k String or array of strings representing key(s) to trigger callback
-   * @param {function} callback Function to run when key(s) are pressed
-   */
-  this.onKeyPress = (k, callback) => {
-    if (Array.isArray(k)) {
-      for (let i = 0; i < k.length; i++) {
-        let key = k[i];
-
-        if (typeof key != "string") throw new TypeError(`Invalid key in array at index ${i}: ${key}`)
-
-        this.listeners[key] = callback;
-      }
-    } else if (typeof k == "string") {
-      this.listeners[k] = callback;
-    } else {
-      throw new TypeError(`Invalid argument, please enter a String or Array`)
+let spriteProperties = {
+    "posX": 0,
+    "posY": 0,
+    "speedX": 0,
+    "speedY": 0,
+    "accelX": 0,
+    "accelY": 0,
+    "width": 0,
+    "height": 0,
+    "color": '',
+};
+class Group extends Array {
+    constructor() {
+        super();
+        for (let prop of Object.keys(spriteProperties)) {
+            Object.defineProperty(this, prop, {
+                get: () => { return null; },
+                set: (val) => {
+                    for (let sprite of this) {
+                        sprite[prop] = val;
+                    }
+                }
+            });
+        }
     }
-  }
-
-  this.executeListeners = (event) => {
-    if (debug) console.log(event.key)
-    if (this.listeners[event.key]) {
-      this.listeners[event.key]()
+    collidesWith(otherSprite) {
+        for (let sprite of this) {
+            if (sprite.collidesWith(otherSprite))
+                return true;
+        }
+        return false;
     }
-  }
-
-  document.addEventListener('keydown', this.executeListeners);
-
-  // return { onKeyPress }
+    move(dX, dY) {
+        for (let sprite of this) {
+            sprite.move(dX, dY);
+        }
+    }
 }
-
-export { World, Input }
+class Sprite {
+    constructor(posX, posY, width, height, color, cornerRadius) {
+        this.speedX = 0;
+        this.speedY = 0;
+        this.accelX = 0;
+        this.accelY = 0;
+        this.cornerRadius = 0;
+        this.posX = posX;
+        this.posY = posY;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        if (cornerRadius) {
+            this.cornerRadius = cornerRadius;
+        }
+        ;
+    }
+    move(dX, dY) {
+        this.posX += dX;
+        this.posY += dY;
+    }
+    top() { return this.posY; }
+    bottom() { return this.posY + this.height; }
+    left() { return this.posX; }
+    right() { return this.posX + this.width; }
+    collidesWith(otherSprite) {
+        return (this.left() - 1 < otherSprite.right() &&
+            this.right() + 1 > otherSprite.left() &&
+            this.top() - 1 < otherSprite.bottom() &&
+            this.bottom() + 1 > otherSprite.top());
+    }
+    goingToCollideWith(otherSprite) {
+        return (this.left() + this.speedX - 1 < otherSprite.right() &&
+            this.right() + this.speedX + 1 > otherSprite.left() &&
+            this.top() + this.speedY - 1 < otherSprite.bottom() &&
+            this.bottom() + this.speedY + 1 > otherSprite.top());
+    }
+}
+class Input {
+    static init() {
+        document.addEventListener('keydown', Input.executeListeners);
+        return Input;
+    }
+    static onKeyPress(keys, callback) {
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
+            Input.listeners[key] = callback;
+        }
+    }
+}
+Input.debug = false;
+Input.listeners = {};
+Input.executeListeners = (event) => {
+    if (Input.debug)
+        console.log(event.key);
+    if (Input.listeners[event.key]) {
+        Input.listeners[event.key]();
+    }
+};
+export { Canvas, Group, Sprite, Input };
