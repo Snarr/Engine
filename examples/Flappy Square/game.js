@@ -1,4 +1,4 @@
-import { Canvas, Group, Sprite, Input } from "./engine.js";
+import { Canvas, Group, Sprite, Input } from "../../engine.js";
 
 let myScheme = ["9e00f9","71049f","560986","aa05fc","8d00e4"]
 
@@ -11,8 +11,9 @@ let colorScheme = {
 
 let canvas, player, floor, background, pipes, gameover
 
-function init() {
-  canvas = new Canvas('canvas', 800, 800);
+canvas = new Canvas('canvas', 800, 800);
+
+canvas.init = () => {
 
   player = new Sprite(100, 100, 50, 50, colorScheme.player);
   player.accelY = 1;
@@ -60,7 +61,7 @@ function createPipe(posX, posY) {
   return group;
 }
 
-function draw() {
+canvas.drawFrame = () => {
 
   canvas.draw(background);
   canvas.draw(player);
@@ -97,47 +98,4 @@ function draw() {
   };
 }
 
-var stop = false;
-var frameCount = 0;
-var fps, fpsInterval, startTime, now, then, elapsed;
-
-startAnimating(60);
-
-function startAnimating(fps) {
-  init();
-  fpsInterval = 1000 / fps;
-  then = Date.now();
-  startTime = then;
-  console.log(startTime);
-  animate();
-}
-
-function animate() {
-
-  // stop
-  if (stop) {
-      return;
-  }
-
-  // request another frame
-
-  requestAnimationFrame(animate);
-
-  // calc elapsed time since last loop
-
-  now = Date.now();
-  elapsed = now - then;
-
-  // if enough time has elapsed, draw the next frame
-
-  if (elapsed > fpsInterval) {
-
-      // Get ready for next frame by setting then=now, but...
-      // Also, adjust for fpsInterval not being multiple of 16.67
-      then = now - (elapsed % fpsInterval);
-
-      // draw stuff here
-      draw();
-
-  }
-}
+canvas.start(60); 

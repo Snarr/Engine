@@ -28,8 +28,8 @@ class Canvas {
             }
         }
     }
-    text(posX, posY, textVal, size) {
-        this.context.fillStyle = 'white';
+    text(posX, posY, textVal, size, color) {
+        this.context.fillStyle = color;
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
         this.context.font = `${size}px Verdana`;
@@ -43,10 +43,39 @@ class Canvas {
     }
     drawSprite(sprite) {
         var _a;
-        this.context.fillStyle = sprite.color;
-        this.context.beginPath();
-        (_a = this.context) === null || _a === void 0 ? void 0 : _a.roundRect(sprite.posX, sprite.posY, sprite.width, sprite.height, sprite.cornerRadius);
-        this.context.fill();
+        if (sprite.image) {
+            this.context.drawImage(sprite.image, sprite.posX, sprite.posY);
+        }
+        else {
+            this.context.fillStyle = sprite.color;
+            this.context.beginPath();
+            (_a = this.context) === null || _a === void 0 ? void 0 : _a.roundRect(sprite.posX, sprite.posY, sprite.width, sprite.height, sprite.cornerRadius);
+            this.context.fill();
+        }
+    }
+    start(fps) {
+        let stop = false;
+        let frameCount = 0;
+        let now;
+        let elapsed;
+        let fpsInterval = 1000 / fps;
+        let then = Date.now();
+        let startTime = then;
+        this.init();
+        this.stop = () => { stop = true; };
+        var animate = () => {
+            if (stop) {
+                return;
+            }
+            requestAnimationFrame(animate);
+            now = Date.now();
+            elapsed = now - then;
+            if (elapsed > fpsInterval) {
+                then = now - (elapsed % fpsInterval);
+                this.drawFrame();
+            }
+        };
+        animate();
     }
 }
 let spriteProperties = {
@@ -88,7 +117,7 @@ class Group extends Array {
     }
 }
 class Sprite {
-    constructor(posX, posY, width, height, color, cornerRadius) {
+    constructor(posX, posY, width, height, color, cornerRadius, image) {
         this.speedX = 0;
         this.speedY = 0;
         this.accelX = 0;
@@ -103,6 +132,9 @@ class Sprite {
             this.cornerRadius = cornerRadius;
         }
         ;
+        if (image) {
+            this.image = image;
+        }
     }
     move(dX, dY) {
         this.posX += dX;
