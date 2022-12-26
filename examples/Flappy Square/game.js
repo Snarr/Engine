@@ -11,7 +11,7 @@ let colorScheme = {
 
 let canvas, player, floor, background, pipes, gameover
 
-canvas = new Canvas('canvas', 800, 800);
+canvas = new Canvas(800, 800);
 
 canvas.init = () => {
 

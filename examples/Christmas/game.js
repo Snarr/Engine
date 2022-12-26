@@ -22,7 +22,7 @@ for (let branch of branchLengths) {
   rowLength -= 6;
 }
 
-let canvas = new Canvas('canvas', 800, 800);
+let canvas = new Canvas(800, 800);
 
 let treeImage = new Image();
 treeImage.src = './high-res-tree.png'
