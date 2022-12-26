@@ -71,7 +71,7 @@ canvas.drawFrame = () => {
   if (gameover) {
     canvas.draw(new Sprite(0, 0, canvas.width, canvas.height, 'rgba(0, 0, 0, 0.5)'))
     canvas.draw(new Sprite(200, 350, 400, 100, 'rgb(50, 50, 50)', 25))
-    canvas.text(400, 405, "Game Over", 60)
+    canvas.text(400, 405, "Game Over", 60, 'white')
     return;
   }
 
