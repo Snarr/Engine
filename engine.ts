@@ -4,6 +4,9 @@ class Canvas {
   context: CanvasRenderingContext2D | null;
   width: number;
   height: number;
+  stop: Function | null;
+  init: Function | null;
+  drawFrame: Function | null;
 
   constructor (id: string, width: number, height: number) {
     this.id = id;
@@ -33,7 +36,7 @@ class Canvas {
       for (let sprite of s) {
         this.update(sprite);
       }
-    }
+    }  
   }
 
   text(posX, posY, textVal, size) {
@@ -52,10 +55,60 @@ class Canvas {
   }
 
   private drawSprite(sprite: Sprite): void {
-    this.context!.fillStyle = sprite.color;
-    this.context.beginPath();
-    this.context?.roundRect(sprite.posX, sprite.posY, sprite.width, sprite.height, sprite.cornerRadius);
-    this.context.fill();
+    if (sprite.image) {
+      this.context.drawImage(sprite.image, sprite.posX, sprite.posY)
+    } else {
+      this.context!.fillStyle = sprite.color;
+      this.context.beginPath();
+      this.context?.roundRect(sprite.posX, sprite.posY, sprite.width, sprite.height, sprite.cornerRadius);
+      this.context.fill();
+    }
+  }
+
+  start(fps: number) {
+    let stop = false;
+    let frameCount = 0;
+    let now: number;
+    let elapsed: number;
+
+    let fpsInterval = 1000 / fps;
+    let then = Date.now();
+    let startTime = then;
+    this.init();
+
+    this.stop = () => { stop = true }
+
+    var animate = () => {
+  
+      // stop
+      if (stop) {
+          return;
+      }
+    
+      // request another frame
+    
+      requestAnimationFrame(animate);
+    
+      // calc elapsed time since last loop
+    
+      now = Date.now();
+      elapsed = now - then;
+    
+      // if enough time has elapsed, draw the next frame
+    
+      if (elapsed > fpsInterval) {
+    
+          // Get ready for next frame by setting then=now, but...
+          // Also, adjust for fpsInterval not being multiple of 16.67
+          then = now - (elapsed % fpsInterval);
+    
+          // draw stuff here
+          this.drawFrame();
+    
+      }
+    }
+    
+    animate();
   }
 }
 
@@ -118,7 +171,9 @@ class Sprite {
 
   cornerRadius: number = 0;
 
-  constructor (posX: number, posY: number, width: number, height: number, color: string, cornerRadius?: number) {
+  image: HTMLImageElement | null;
+
+  constructor (posX: number, posY: number, width: number, height: number, color: string, cornerRadius?: number, image?: HTMLImageElement) {
     this.posX = posX;
     this.posY = posY;
     this.width = width;
@@ -127,6 +182,9 @@ class Sprite {
     if (cornerRadius) { 
       this.cornerRadius = cornerRadius
     };
+    if (image) {
+      this.image = image;
+    }
   }
 
   move(dX: number, dY: number): void {
