@@ -39,8 +39,8 @@ class Canvas {
     }  
   }
 
-  text(posX, posY, textVal, size) {
-    this.context.fillStyle = 'white'
+  text(posX, posY, textVal, size, color) {
+    this.context.fillStyle = color
     this.context.textAlign = 'center'
     this.context.textBaseline = 'middle'
     this.context.font = `${size}px Verdana`
