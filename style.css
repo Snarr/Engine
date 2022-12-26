@@ -5,6 +5,7 @@ html, body {
   height: 100%;
   margin: 0;
   font-family: 'Times New Roman', Times, serif;
+  user-select: none;
 }
 
 body {
@@ -84,6 +85,6 @@ ul {
 }
 
 .examples li:hover {
-  box-shadow: 0px 4px 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 2px 1px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.5s;
 }
