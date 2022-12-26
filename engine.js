@@ -1,12 +1,12 @@
 class Canvas {
-    constructor(id, width, height) {
-        this.id = id;
+    constructor(width, height) {
         this.width = width;
         this.height = height;
-        this.element = document.getElementById(this.id);
+        this.element = document.createElement("canvas");
         this.element.width = this.width;
         this.element.height = this.height;
         this.context = this.element.getContext('2d');
+        document.body.appendChild(this.element);
     }
     draw(s) {
         if (s instanceof Sprite) {
@@ -51,6 +51,8 @@ class Canvas {
             this.context.beginPath();
             (_a = this.context) === null || _a === void 0 ? void 0 : _a.roundRect(sprite.posX, sprite.posY, sprite.width, sprite.height, sprite.cornerRadius);
             this.context.fill();
+            if (this.stroke)
+                this.context.stroke();
         }
     }
     start(fps) {

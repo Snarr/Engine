@@ -7,16 +7,18 @@ class Canvas {
   stop: Function | null;
   init: Function | null;
   drawFrame: Function | null;
+  stroke: boolean | null;
 
-  constructor (id: string, width: number, height: number) {
-    this.id = id;
+  constructor ( width: number, height: number) {
     this.width = width;
     this.height = height;
 
-    this.element = <HTMLCanvasElement> document.getElementById(this.id);
+    this.element = document.createElement("canvas");
     this.element.width = this.width;
     this.element.height = this.height;
     this.context = this.element.getContext('2d');
+
+    document.body.appendChild(this.element);
   }
 
   draw(s: Sprite|Group): void {
@@ -62,6 +64,7 @@ class Canvas {
       this.context.beginPath();
       this.context?.roundRect(sprite.posX, sprite.posY, sprite.width, sprite.height, sprite.cornerRadius);
       this.context.fill();
+      if (this.stroke) this.context.stroke();
     }
   }
 
