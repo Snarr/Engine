@@ -1,4 +1,4 @@
-import { Canvas, Sprite, Group } from "../../engine.js";
+import { Canvas, Sprite, Group } from "https://cdn.jsdelivr.net/gh/Snarr/Engine/engine.js";
 
 let canvas = new Canvas(800, 800)
 canvas.stroke = true;

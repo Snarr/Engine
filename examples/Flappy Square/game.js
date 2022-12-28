@@ -1,4 +1,4 @@
-import { Canvas, Group, Sprite, Input } from "../../engine.js";
+import { Canvas, Group, Sprite, Input } from "https://cdn.jsdelivr.net/gh/Snarr/Engine/engine.js";
 
 let myScheme = ["9e00f9","71049f","560986","aa05fc","8d00e4"]
 

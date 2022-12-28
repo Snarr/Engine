@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "target": "es2016",
-    "removeComments": true,
-  },
-  "files": [
-    "engine.ts"
-  ]
-}
