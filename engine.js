@@ -1,3 +1,4 @@
+"strict: true";
 class Canvas {
     constructor(width, height) {
         this.width = width;
@@ -8,12 +9,12 @@ class Canvas {
         this.context = this.element.getContext('2d');
         document.body.appendChild(this.element);
     }
-    draw(s) {
-        if (s instanceof Sprite) {
-            this.drawSprite(s);
+    draw(spriteLike) {
+        if (spriteLike instanceof Sprite) {
+            this.drawSprite(spriteLike);
         }
-        else if (s instanceof Group) {
-            for (let sprite of s) {
+        else if (spriteLike instanceof Group) {
+            for (let sprite of spriteLike) {
                 this.draw(sprite);
             }
         }
@@ -80,30 +81,9 @@ class Canvas {
         animate();
     }
 }
-let spriteProperties = {
-    "posX": 0,
-    "posY": 0,
-    "speedX": 0,
-    "speedY": 0,
-    "accelX": 0,
-    "accelY": 0,
-    "width": 0,
-    "height": 0,
-    "color": '',
-};
 class Group extends Array {
     constructor() {
         super();
-        for (let prop of Object.keys(spriteProperties)) {
-            Object.defineProperty(this, prop, {
-                get: () => { return null; },
-                set: (val) => {
-                    for (let sprite of this) {
-                        sprite[prop] = val;
-                    }
-                }
-            });
-        }
     }
     collidesWith(otherSprite) {
         for (let sprite of this) {
@@ -117,6 +97,29 @@ class Group extends Array {
             sprite.move(dX, dY);
         }
     }
+    setPropertyOfChildren(key, value) {
+        for (let sprite of this) {
+            sprite[key] = value;
+        }
+    }
+    set posX(x) { this.setPropertyOfChildren('posX', x); }
+    ;
+    set posY(y) { this.setPropertyOfChildren('posY', y); }
+    ;
+    set speedX(x) { this.setPropertyOfChildren('speedX', x); }
+    ;
+    set speedY(y) { this.setPropertyOfChildren('speedY', y); }
+    ;
+    set accelX(x) { this.setPropertyOfChildren('accelX', x); }
+    ;
+    set accelY(y) { this.setPropertyOfChildren('accelY', y); }
+    ;
+    set width(w) { this.setPropertyOfChildren('width', w); }
+    ;
+    set height(h) { this.setPropertyOfChildren('height', h); }
+    ;
+    set color(color) { this.setPropertyOfChildren('color', color); }
+    ;
 }
 class Sprite {
     constructor(posX, posY, width, height, color, cornerRadius, image) {

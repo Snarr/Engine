@@ -40,7 +40,7 @@ class Canvas {
       for (let sprite of s) {
         this.update(sprite);
       }
-    }  
+    }
   }
 
   text(posX, posY, textVal, size, color) {
@@ -117,33 +117,21 @@ class Canvas {
   }
 }
 
-let spriteProperties = {
-  "posX": 0,
-  "posY": 0,
-  "speedX": 0,
-  "speedY": 0,
-  "accelX": 0,
-  "accelY": 0,
-  "width": 0,
-  "height": 0,
-  "color": '',
+interface ISprite {
+  posX: number,
+  posY: number,
+  speedX: number,
+  speedY: number,
+  accelX: number,
+  accelY: number,
+  width: number,
+  height: number,
+  color: string,
 }
 
-class Group extends Array {
-
+class Group extends Array implements ISprite {
   constructor () {
     super();
-
-    for (let prop of Object.keys(spriteProperties)) {
-      Object.defineProperty(this, prop, {
-        get: () => { return null },
-        set: (val) => { 
-          for (let sprite of this) {
-            sprite[prop] = val;
-          }
-        }
-      })
-    }
   }
 
   collidesWith(otherSprite: Sprite): boolean {
@@ -158,18 +146,31 @@ class Group extends Array {
       sprite.move(dX, dY)
     }
   }
+
+  private setPropertyOfChildren<Type, Key extends keyof ISprite>(key: Key, value: Type) {
+    for (let sprite of this) {
+      sprite[key] = <Type> value;
+    }
+  }
+
+  set posX(x: number) { this.setPropertyOfChildren('posX', x) };
+  set posY(y: number) { this.setPropertyOfChildren('posY', y) };
+  set speedX(x: number) { this.setPropertyOfChildren('speedX', x) };
+  set speedY(y: number) { this.setPropertyOfChildren('speedY', y) };
+  set accelX(x: number) { this.setPropertyOfChildren('accelX', x) };
+  set accelY(y: number) { this.setPropertyOfChildren('accelY', y) };
+  set width(w: number) { this.setPropertyOfChildren('width', w) };
+  set height(h: number) { this.setPropertyOfChildren('height', h) };
+  set color(color: string) { this.setPropertyOfChildren('color', color)};
 }
 
-class Sprite {
+class Sprite implements ISprite {
   posX: number;
   posY: number;
-
   speedX: number = 0;
   speedY: number = 0;
-
   accelX: number = 0;
   accelY: number = 0;
-
   width: number;
   height: number;
   color: string;
