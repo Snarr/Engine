@@ -1,5 +1,3 @@
-"strict: true"
-
 class Canvas {
   id: string;
   element: HTMLCanvasElement | null; 
@@ -150,6 +148,12 @@ class Group extends Array implements ISprite {
   private setPropertyOfChildren<Type, Key extends keyof ISprite>(key: Key, value: Type) {
     for (let sprite of this) {
       sprite[key] = <Type> value;
+    }
+  }
+
+  set<Key extends keyof ISprite>(key: Key, value: ISprite[Key]): void {
+    for (let sprite of this) {
+      sprite[key] = value;
     }
   }
 

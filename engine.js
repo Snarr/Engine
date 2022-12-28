@@ -1,4 +1,3 @@
-"strict: true";
 class Canvas {
     constructor(width, height) {
         this.width = width;
@@ -102,24 +101,20 @@ class Group extends Array {
             sprite[key] = value;
         }
     }
+    set(key, value) {
+        for (let sprite of this) {
+            sprite[key] = value;
+        }
+    }
     set posX(x) { this.setPropertyOfChildren('posX', x); }
-    ;
     set posY(y) { this.setPropertyOfChildren('posY', y); }
-    ;
     set speedX(x) { this.setPropertyOfChildren('speedX', x); }
-    ;
     set speedY(y) { this.setPropertyOfChildren('speedY', y); }
-    ;
     set accelX(x) { this.setPropertyOfChildren('accelX', x); }
-    ;
     set accelY(y) { this.setPropertyOfChildren('accelY', y); }
-    ;
     set width(w) { this.setPropertyOfChildren('width', w); }
-    ;
     set height(h) { this.setPropertyOfChildren('height', h); }
-    ;
     set color(color) { this.setPropertyOfChildren('color', color); }
-    ;
 }
 class Sprite {
     constructor(posX, posY, width, height, color, cornerRadius, image) {
