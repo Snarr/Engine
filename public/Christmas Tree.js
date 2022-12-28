@@ -25,10 +25,10 @@ for (let branch of branchLengths) {
 let canvas = new Canvas(800, 800);
 
 let treeImage = new Image();
-treeImage.src = './high-res-tree.png'
+treeImage.src = 'http://localhost:1313/high-res-tree.png'
 
 let backgroundImage = new Image();
-backgroundImage.src = './background.jpg'
+backgroundImage.src = 'http://localhost:1313/background.jpg'
 let background = new Sprite(0, 0, 800, 800, "white", 5, backgroundImage);
 
 let tree = new Sprite(70, 80, 660, 700, "red", 0, treeImage)
@@ -54,4 +54,4 @@ canvas.drawFrame = () => {
   canvas.update(tree);
 }
 
-canvas.start(1);
+canvas.start(1);  
