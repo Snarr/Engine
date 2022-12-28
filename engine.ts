@@ -153,15 +153,15 @@ class Group extends Array implements ISprite {
     }
   }
 
-  set posX(x: number) { this.setPropertyOfChildren('posX', x) };
-  set posY(y: number) { this.setPropertyOfChildren('posY', y) };
-  set speedX(x: number) { this.setPropertyOfChildren('speedX', x) };
-  set speedY(y: number) { this.setPropertyOfChildren('speedY', y) };
-  set accelX(x: number) { this.setPropertyOfChildren('accelX', x) };
-  set accelY(y: number) { this.setPropertyOfChildren('accelY', y) };
-  set width(w: number) { this.setPropertyOfChildren('width', w) };
-  set height(h: number) { this.setPropertyOfChildren('height', h) };
-  set color(color: string) { this.setPropertyOfChildren('color', color)};
+  set posX(x: number) { this.setPropertyOfChildren('posX', x) }
+  set posY(y: number) { this.setPropertyOfChildren('posY', y) }
+  set speedX(x: number) { this.setPropertyOfChildren('speedX', x) }
+  set speedY(y: number) { this.setPropertyOfChildren('speedY', y) }
+  set accelX(x: number) { this.setPropertyOfChildren('accelX', x) }
+  set accelY(y: number) { this.setPropertyOfChildren('accelY', y) }
+  set width(w: number) { this.setPropertyOfChildren('width', w) }
+  set height(h: number) { this.setPropertyOfChildren('height', h) }
+  set color(color: string) { this.setPropertyOfChildren('color', color)}
 }
 
 class Sprite implements ISprite {
