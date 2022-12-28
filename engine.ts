@@ -1,3 +1,5 @@
+"strict: true"
+
 class Canvas {
   id: string;
   element: HTMLCanvasElement | null; 
@@ -21,11 +23,11 @@ class Canvas {
     document.body.appendChild(this.element);
   }
 
-  draw(s: Sprite|Group): void {
-    if (s instanceof Sprite) {
-      this.drawSprite(s);
-    } else if (s instanceof Group) {
-      for (let sprite of s) {
+  draw(spriteLike: Sprite|Group): void {
+    if (spriteLike instanceof Sprite) {
+      this.drawSprite(spriteLike);
+    } else if (spriteLike instanceof Group) {
+      for (let sprite of spriteLike) {
         this.draw(sprite);
       }
     }
