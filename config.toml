@@ -1,6 +1,7 @@
 baseURL = 'https://snarr.github.io/Engine/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Engine'
+description = 'A 2D game engine library in JavaScript based on the Canvas API'
 theme = 'engine-docs'
 
 [menu]
