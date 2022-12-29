@@ -31,11 +31,11 @@ class Canvas {
     }
   }
 
-  update(s: Sprite|Group): void {
-    if (s instanceof Sprite) {
-      this.updateSprite(s);
-    } else if (s instanceof Group) {
-      for (let sprite of s) {
+  update(spriteLike: Sprite|Group): void {
+    if (spriteLike instanceof Sprite) {
+      this.updateSprite(spriteLike);
+    } else if (spriteLike instanceof Group) {
+      for (let sprite of spriteLike) {
         this.update(sprite);
       }
     }
@@ -77,30 +77,26 @@ class Canvas {
     let fpsInterval = 1000 / fps;
     let then = Date.now();
     let startTime = then;
+    
     this.init();
 
     this.stop = () => { stop = true }
 
     var animate = () => {
   
-      // stop
       if (stop) {
           return;
       }
-    
+      
       // request another frame
-    
       requestAnimationFrame(animate);
     
       // calc elapsed time since last loop
-    
       now = Date.now();
       elapsed = now - then;
     
       // if enough time has elapsed, draw the next frame
-    
       if (elapsed > fpsInterval) {
-    
           // Get ready for next frame by setting then=now, but...
           // Also, adjust for fpsInterval not being multiple of 16.67
           then = now - (elapsed % fpsInterval);
