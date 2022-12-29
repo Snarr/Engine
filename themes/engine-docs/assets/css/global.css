@@ -50,3 +50,9 @@ a {
 .content {
   padding: 1rem 2rem 1rem 2rem;
 }
+
+canvas {
+  aspect-ratio: 1/1;
+  width: 37rem;
+  height: 37rem;
+}
