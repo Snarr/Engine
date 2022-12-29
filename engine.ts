@@ -21,7 +21,7 @@ class Canvas {
     document.body.appendChild(this.element);
   }
 
-  draw(spriteLike: Sprite|Group): void {
+  draw(spriteLike: ISprite): void {
     if (spriteLike instanceof Sprite) {
       this.drawSprite(spriteLike);
     } else if (spriteLike instanceof Group) {
@@ -31,7 +31,7 @@ class Canvas {
     }
   }
 
-  update(spriteLike: Sprite|Group): void {
+  update(spriteLike: ISprite): void {
     if (spriteLike instanceof Sprite) {
       this.updateSprite(spriteLike);
     } else if (spriteLike instanceof Group) {
@@ -121,14 +121,16 @@ interface ISprite {
   width: number,
   height: number,
   color: string,
+  collidesWith: Function,
+  move: Function,
 }
 
-class Group extends Array implements ISprite {
+class Group extends Array<ISprite> implements ISprite {
   constructor () {
     super();
   }
 
-  collidesWith(otherSprite: Sprite): boolean {
+  collidesWith(otherSprite: ISprite): boolean {
     for (let sprite of this) {
       if (sprite.collidesWith(otherSprite)) return true;
     }
@@ -141,7 +143,7 @@ class Group extends Array implements ISprite {
     }
   }
 
-  private setPropertyOfChildren<Type, Key extends keyof ISprite>(key: Key, value: Type) {
+  private setPropertyOfChildren<Key extends keyof ISprite, Type extends ISprite[Key]>(key: Key, value: Type) {
     for (let sprite of this) {
       sprite[key] = <Type> value;
     }
@@ -198,10 +200,10 @@ class Sprite implements ISprite {
     this.posY += dY;
   }
 
-  top() { return this.posY; }
-  bottom() { return this.posY + this.height; }
-  left() { return this.posX; }
-  right() { return this.posX + this.width }
+  top(): number { return this.posY; }
+  bottom(): number { return this.posY + this.height; }
+  left(): number { return this.posX; }
+  right(): number { return this.posX + this.width }
 
   collidesWith(otherSprite: Sprite): boolean {
     return (this.left()-1 < otherSprite.right() &&
@@ -209,6 +211,7 @@ class Sprite implements ISprite {
             this.top()-1 < otherSprite.bottom() &&
             this.bottom()+1 > otherSprite.top())
   }
+
   goingToCollideWith(otherSprite: Sprite): boolean {
     return (this.left()+this.speedX - 1 < otherSprite.right() &&
             this.right()+this.speedX + 1 > otherSprite.left() &&
@@ -221,14 +224,10 @@ class Input {
   static debug: boolean = false;
   static listeners: Object = {};
 
-  // constructor (debug: boolean) {
-  //   Input.debug = debug;
-
   static init() {
     document.addEventListener('keydown', Input.executeListeners);
     return Input;
   }
-  // }
 
   static onKeyPress (keys: Array<string>, callback: () => void) {
     for (let i = 0; i < keys.length; i++) {

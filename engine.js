@@ -18,12 +18,12 @@ class Canvas {
             }
         }
     }
-    update(s) {
-        if (s instanceof Sprite) {
-            this.updateSprite(s);
+    update(spriteLike) {
+        if (spriteLike instanceof Sprite) {
+            this.updateSprite(spriteLike);
         }
-        else if (s instanceof Group) {
-            for (let sprite of s) {
+        else if (spriteLike instanceof Group) {
+            for (let sprite of spriteLike) {
                 this.update(sprite);
             }
         }
