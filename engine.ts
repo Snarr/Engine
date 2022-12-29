@@ -121,8 +121,8 @@ interface ISprite {
   width: number,
   height: number,
   color: string,
-  collidesWith: Function,
-  move: Function,
+  collidesWith: (otherSprite: ISprite) => boolean,
+  move: (dX: number, dY: number) => void,
 }
 
 class Group extends Array<ISprite> implements ISprite {
@@ -137,7 +137,7 @@ class Group extends Array<ISprite> implements ISprite {
     return false;
   }
 
-  move(dX, dY): void {
+  move(dX: number, dY: number): void {
     for (let sprite of this) {
       sprite.move(dX, dY)
     }
