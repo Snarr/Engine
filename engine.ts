@@ -245,4 +245,15 @@ class Input {
   }
 }
 
+class Image {
+  src: string;
+  width: number;
+  height: number;
+  constructor(src, width, height) {
+    this.src = src;
+    this.width = width;
+    this.height = height;
+  }
+}
+
 export { Canvas, Group, Sprite, Input }
