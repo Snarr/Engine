@@ -162,6 +162,9 @@ class Input {
         document.addEventListener('keydown', Input.executeListeners);
         return Input;
     }
+    static onMouseEvent(event, callback) {
+        document.addEventListener(event, callback);
+    }
     static onKeyPress(keys, callback) {
         for (let i = 0; i < keys.length; i++) {
             let key = keys[i];
@@ -171,6 +174,7 @@ class Input {
 }
 Input.debug = false;
 Input.listeners = {};
+Input.mouseEvents = {};
 Input.executeListeners = (event) => {
     if (Input.debug)
         console.log(event.key);
