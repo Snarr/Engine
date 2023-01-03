@@ -225,6 +225,7 @@ class Sprite implements ISprite {
 // Structure involves storing AbortControllers and returning IDs to destroy event listeners when necessary
 
 // type MouseEvent = "mousedown" | "mouseenter" | "mouseleave" | "mousemove" | "mouseout" | "mouseover" | "click" | "dblclick"
+type MouseState = "down" | "up";
 
 // type MouseEventMap = {
 //   [name in MouseEvent]: Array<AbortController>;
@@ -234,6 +235,7 @@ class Input {
   static debug: boolean = false;
   static listeners: Object = {};
   static mouseEvents: Object = {};
+  // static mouseState: MouseState = "up";
 
   static init() {
     document.addEventListener('keydown', Input.executeListeners);
